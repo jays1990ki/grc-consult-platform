@@ -6,10 +6,11 @@ import RiskMatrix from "@/components/risk/RiskMatrix";
 import RadarChart from "@/components/risk/RadarChart";
 import { ISO_CONTROLS, CATEGORY_NAMES, countByCategory } from "@/lib/iso-controls";
 import { RISK_COLORS, type RiskLevel } from "@/lib/risk-utils";
+import { DB_PATH } from "@/lib/db-path";
 
 function getData() {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
 
     const levelCounts = db.prepare(
       "SELECT risk_level, COUNT(*) as count FROM risk_assessments GROUP BY risk_level"

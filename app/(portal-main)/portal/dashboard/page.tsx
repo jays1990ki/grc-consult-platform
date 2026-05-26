@@ -6,10 +6,11 @@ import { getUserPermissions, PORTAL_MODULES } from "@/lib/portal-auth";
 import Database from "better-sqlite3";
 import path from "path";
 import { Lock, ArrowRight } from "lucide-react";
+import { DB_PATH } from "@/lib/db-path";
 
 function getStats() {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     const assets      = (db.prepare("SELECT COUNT(*) as c FROM risk_assets").get() as any).c;
     const assessments = (db.prepare("SELECT COUNT(*) as c FROM risk_assessments").get() as any).c;
     const critical    = (db.prepare("SELECT COUNT(*) as c FROM risk_assessments WHERE risk_level='Critical'").get() as any).c;

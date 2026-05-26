@@ -4,10 +4,11 @@ import { requireModuleAccess } from "@/lib/portal-auth";
 import PermissionDenied from "@/components/portal/PermissionDenied";
 import AssetRegistrationForm from "@/components/risk/AssetRegistrationForm";
 import { formatDate } from "@/lib/utils";
+import { DB_PATH } from "@/lib/db-path";
 
 function getAssets() {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     const rows = db.prepare(`
       SELECT ra.*, (SELECT COUNT(*) FROM risk_assessments WHERE asset_id = ra.id) as assessment_count
       FROM risk_assets ra ORDER BY ra.created_at DESC

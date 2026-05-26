@@ -4,13 +4,14 @@ import path from "path";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
 import type { ModulePermission, PortalPermissions } from "@/lib/portal-modules";
+import { DB_PATH } from "@/lib/db-path";
 
 export type { ModulePermission, PortalPermissions };
 export { PORTAL_MODULES } from "@/lib/portal-modules";
 
 export function getUserPermissions(userId: number): PortalPermissions {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     const rows = db.prepare(
       "SELECT module, can_access, can_edit FROM user_permissions WHERE user_id = ?"
     ).all(userId) as { module: string; can_access: number; can_edit: number }[];

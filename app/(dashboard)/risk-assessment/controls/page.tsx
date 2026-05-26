@@ -3,12 +3,13 @@ import path from "path";
 import ControlSelector from "@/components/risk/ControlSelector";
 import Link from "next/link";
 import { BookOpen, ShieldCheck } from "lucide-react";
+import { DB_PATH } from "@/lib/db-path";
 
 const ORG_ID = 1; // v0.6: single-org default; extend via session when multi-tenant
 
 function getData() {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
 
     const assessments = db.prepare(`
       SELECT ra.*, ras.name as asset_name, ras.type as asset_type

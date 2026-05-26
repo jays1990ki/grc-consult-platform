@@ -2,6 +2,7 @@ import Database from "better-sqlite3";
 import path from "path";
 import AssetRegistrationForm from "@/components/risk/AssetRegistrationForm";
 import { formatDate } from "@/lib/utils";
+import { DB_PATH } from "@/lib/db-path";
 
 interface CriticalBiaLink {
   processName: string;
@@ -10,7 +11,7 @@ interface CriticalBiaLink {
 
 function getAssets() {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     const rows = db.prepare(`
       SELECT ra.*, (SELECT COUNT(*) FROM risk_assessments WHERE asset_id = ra.id) as assessment_count
       FROM risk_assets ra ORDER BY ra.created_at DESC
@@ -22,7 +23,7 @@ function getAssets() {
 
 function getCriticalBiaLinks(): CriticalBiaLink[] {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     const critProcs = db.prepare(`
       SELECT process_name, related_assets
       FROM business_processes

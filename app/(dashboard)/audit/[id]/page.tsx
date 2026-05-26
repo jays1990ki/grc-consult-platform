@@ -5,12 +5,13 @@ import AuditProjectDetail, {
   type AuditProject,
   type EvidenceRow,
 } from "@/components/audit/AuditProjectDetail";
+import { DB_PATH } from "@/lib/db-path";
 
 const ORG_ID = 1;
 
 function getData(id: number): { project: AuditProject; evidence: EvidenceRow[] } | null {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     db.pragma("journal_mode = WAL");
 
     const project = db.prepare(

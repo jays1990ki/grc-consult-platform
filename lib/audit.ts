@@ -1,5 +1,6 @@
 import Database from "better-sqlite3";
 import path from "path";
+import { DB_PATH } from "@/lib/db-path";
 
 export type AuditAction =
   | "login" | "logout"
@@ -31,7 +32,7 @@ export interface AuditEntry {
 
 export function writeLog(entry: AuditEntry): void {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     db.prepare(`
       INSERT INTO activity_logs
         (user_id, user_name, user_email, action, module, target_id, target_name, details, ip_address, created_at)

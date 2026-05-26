@@ -4,9 +4,10 @@ import path from "path";
 import { getRiskLevel } from "@/lib/risk-utils";
 import { writeLog, getClientIP } from "@/lib/audit";
 import { getSession } from "@/lib/auth/session";
+import { DB_PATH } from "@/lib/db-path";
 
 function getDb() {
-  const db = new Database(path.join(process.cwd(), "data", "app.db"));
+  const db = new Database(DB_PATH);
   db.pragma("journal_mode = WAL");
   db.pragma("foreign_keys = ON");
   return db;

@@ -2,13 +2,11 @@
  * v0.6 — ISO 27001:2022 Control Library + organizationId isolation
  */
 import Database from "better-sqlite3";
-import path from "path";
 import fs from "fs";
+import { DB_PATH } from "../lib/db-path";
 
-const dbDir = path.join(process.cwd(), "data");
-if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
 
-const db = new Database(path.join(dbDir, "app.db"));
+const db = new Database(DB_PATH);
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = OFF"); // temporarily off while we alter tables
 

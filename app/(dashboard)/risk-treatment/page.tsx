@@ -4,13 +4,14 @@ import TreatmentPanel, { type RiskRow } from "@/components/risk/TreatmentPanel";
 import Link from "next/link";
 import { Kanban, AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 import ExportPDFButton from "@/components/shared/ExportPDFButton";
+import { DB_PATH } from "@/lib/db-path";
 
 
 const ORG_ID = 1;
 
 function getData() {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
 
     const risks = db.prepare(`
       SELECT ra.id, ra.threat_name, ra.inherent_risk, ra.risk_level,

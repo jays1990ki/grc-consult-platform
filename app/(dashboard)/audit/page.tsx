@@ -1,6 +1,7 @@
 import Database from "better-sqlite3";
 import path from "path";
 import AuditProjectsList, { type AuditProjectRow } from "@/components/audit/AuditProjectsList";
+import { DB_PATH } from "@/lib/db-path";
 
 const ORG_ID = 1;
 
@@ -14,7 +15,7 @@ interface AuditStats {
 
 function getData(): { projects: AuditProjectRow[]; stats: AuditStats; frameworkOptions: string[] } {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     db.pragma("journal_mode = WAL");
 
     const projects = db.prepare(`

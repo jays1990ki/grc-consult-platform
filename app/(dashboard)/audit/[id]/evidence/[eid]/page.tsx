@@ -5,6 +5,7 @@ import EvidenceDetail, {
   type EvidenceRequest,
   type EvidenceFile,
 } from "@/components/audit/EvidenceDetail";
+import { DB_PATH } from "@/lib/db-path";
 
 const ORG_ID = 1;
 
@@ -13,7 +14,7 @@ function getData(
   eid: number
 ): { evidence: EvidenceRequest; files: EvidenceFile[]; projectName: string } | null {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     db.pragma("journal_mode = WAL");
 
     const project = db.prepare(

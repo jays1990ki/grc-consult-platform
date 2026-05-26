@@ -5,10 +5,11 @@ import RequirementsList, {
   type FrameworkInfo,
   type RequirementRow,
 } from "@/components/admin/RequirementsList";
+import { DB_PATH } from "@/lib/db-path";
 
 function getData(id: number): { framework: FrameworkInfo; requirements: RequirementRow[] } | null {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     db.pragma("journal_mode = WAL");
 
     const fw = db.prepare("SELECT * FROM gap_frameworks WHERE id = ?").get(id) as FrameworkInfo | undefined;

@@ -3,29 +3,36 @@ services:
     name: me-admin-portal
     runtime: node
     region: singapore   # closest to Thailand / SEA
-    plan: starter       # upgrade to standard for persistent disk
+    plan: starter       # persistent disk requires Starter plan or above
 
-    # Build phase: compile only — persistent disk is NOT mounted during build
+    # Build phase: npm ci installs devDeps (tsx) needed for migrations at start.
+    # The persistent disk is NOT yet mounted here — only compile the app.
     buildCommand: npm ci && npm run build
 
-    # Start phase: disk is mounted here — run idempotent migrations then serve
-    # db:push and db:seed:frameworks both use INSERT OR IGNORE, safe to run on every start
+    # Start phase: disk is mounted, DB_PATH points to the persistent volume.
+    # Migrations are idempotent (IF NOT EXISTS / INSERT OR IGNORE) — safe on every deploy.
     startCommand: npm run db:push && npm run db:seed:frameworks && npm start
 
-    # Persistent disk required for SQLite + uploaded files
+    # Persistent disk — SQLite database + uploaded evidence files
     disk:
       name: me-admin-data
-      mountPath: /opt/render/project/src/data
-      sizeGB: 1   # increase as needed
+      mountPath: /data
+      sizeGB: 1   # upgrade as needed
 
     envVars:
       - key: NODE_ENV
         value: production
 
-      - key: JWT_SECRET
-        generateValue: true   # Render generates a secure random value
+      # Tell the app where to find (or create) the SQLite database file.
+      # Must match the disk mountPath above.
+      - key: DB_PATH
+        value: /data/app.db
 
-    # Health check — A05: returns { status: "ok" }, no sensitive info
+      # JWT secret for session signing — Render auto-generates a secure value.
+      - key: JWT_SECRET
+        generateValue: true
+
+    # Liveness check — returns { status: "ok" } with no sensitive info (A05)
     healthCheckPath: /api/health
 
-    autoDeploy: false   # set true to deploy on every push to main
+    autoDeploy: false   # set true to deploy automatically on every push to main

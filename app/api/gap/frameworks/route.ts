@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import Database from "better-sqlite3";
 import path from "path";
+import { DB_PATH } from "@/lib/db-path";
+
+// Force dynamic so Next.js does not try to pre-render this at build time
+// (SQLite disk is not mounted during the Render.com build phase).
+export const dynamic = "force-dynamic";
 
 function getDb() {
-  const db = new Database(path.join(process.cwd(), "data", "app.db"));
+  const db = new Database(DB_PATH);
   db.pragma("journal_mode = WAL");
   return db;
 }

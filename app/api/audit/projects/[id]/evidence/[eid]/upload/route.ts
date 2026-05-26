@@ -22,11 +22,12 @@ import {
   generateStoredFilename,
   computeSha256,
 } from "@/lib/file-security";
+import { DB_PATH } from "@/lib/db-path";
 
 const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
 
 function getDb() {
-  const db = new Database(path.join(process.cwd(), "data", "app.db"));
+  const db = new Database(DB_PATH);
   db.pragma("journal_mode = WAL");
   db.pragma("foreign_keys = ON");
   return db;

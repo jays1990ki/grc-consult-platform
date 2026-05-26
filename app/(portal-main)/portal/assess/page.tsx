@@ -5,10 +5,11 @@ import PermissionDenied from "@/components/portal/PermissionDenied";
 import AssessmentForm from "@/components/risk/AssessmentForm";
 import { RISK_COLORS, type RiskLevel } from "@/lib/risk-utils";
 import Link from "next/link";
+import { DB_PATH } from "@/lib/db-path";
 
 function getData() {
   try {
-    const db = new Database(path.join(process.cwd(), "data", "app.db"));
+    const db = new Database(DB_PATH);
     const assets = db.prepare("SELECT * FROM risk_assets ORDER BY name").all() as any[];
     const assessments = db.prepare(`
       SELECT ra.*, ras.name as asset_name, ras.type as asset_type
