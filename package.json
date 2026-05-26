@@ -1,0 +1,46 @@
+{
+  "name": "me-admin-portal",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:push": "tsx scripts/migrate.ts && tsx scripts/migrate-risk.ts && tsx scripts/migrate-portal.ts && tsx scripts/migrate-audit.ts && tsx scripts/migrate-v06.ts && tsx scripts/migrate-v07.ts && tsx scripts/migrate-v08.ts && tsx scripts/migrate-v10.ts && tsx scripts/migrate-v11.ts && tsx scripts/migrate-v12.ts && tsx scripts/migrate-v13.ts",
+    "db:seed:frameworks": "tsx scripts/seed-frameworks-admin.ts",
+    "db:seed:controls": "tsx scripts/seed-controls.ts",
+    "db:seed:gap": "tsx scripts/seed-gap.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:seed:risk": "tsx scripts/seed-risk.ts",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@react-pdf/renderer": "^3.4.5",
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.1.2",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.32.1",
+    "jose": "^5.6.3",
+    "lucide-react": "^0.408.0",
+    "next": "14.2.5",
+    "react": "^18",
+    "react-dom": "^18",
+    "tailwind-merge": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "drizzle-kit": "^0.23.0",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "tsx": "^4.16.2",
+    "typescript": "^5"
+  }
+}

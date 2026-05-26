@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: me-admin-portal
+    runtime: node
+    region: singapore   # closest to Thailand / SEA
+    plan: starter       # upgrade to standard for persistent disk
+
+    buildCommand: |
+      npm ci
+      npm run db:push
+      npm run db:seed:frameworks
+      npm run build
+
+    startCommand: npm start
+
+    # Persistent disk required for SQLite + uploaded files
+    disk:
+      name: me-admin-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1   # increase as needed
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: JWT_SECRET
+        generateValue: true   # Render generates a secure random value
+
+    # Health check — A05: returns { status: "ok" }, no sensitive info
+    healthCheckPath: /api/health
+
+    autoDeploy: false   # set true to deploy on every push to main
