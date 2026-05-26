@@ -38,7 +38,7 @@ export default function AssessPage() {
       </div>
 
       {/* Summary stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {(["Critical","Medium","Low"] as RiskLevel[]).map(level => (
           <div key={level} className={`rounded-xl p-4 border ${RISK_COLORS[level].bg} border-opacity-30`}
             style={{ borderColor: RISK_COLORS[level].hex + "44" }}>

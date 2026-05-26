@@ -81,7 +81,7 @@ export default async function PortalAssetsPage() {
                     </div>
                   </div>
                   {a.description && <p className="text-xs text-gray-500 mb-3">{a.description}</p>}
-                  <div className="grid grid-cols-4 gap-1.5 text-xs text-center">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5 text-xs text-center">
                     {[
                       { l: "C", v: a.confidentiality, cls: "bg-blue-50 text-blue-700" },
                       { l: "I", v: a.integrity,       cls: "bg-purple-50 text-purple-700" },

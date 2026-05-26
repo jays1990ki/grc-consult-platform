@@ -34,7 +34,8 @@ export default function RiskMatrix({ matrix }: RiskMatrixProps) {
         ))}
       </div>
 
-      <div className="flex">
+      <div className="overflow-x-auto">
+      <div className="flex min-w-[320px]">
         {/* Y-axis label */}
         <div className="flex items-center justify-center pr-2" style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontSize: "11px", color: "#6b7280", letterSpacing: "0.05em" }}>
           LIKELIHOOD →
@@ -77,6 +78,7 @@ export default function RiskMatrix({ matrix }: RiskMatrixProps) {
           </table>
           <div className="text-center text-xs text-gray-500 mt-1 font-semibold tracking-wide">IMPACT →</div>
         </div>
+      </div>
       </div>
 
       <p className="text-xs text-gray-500">

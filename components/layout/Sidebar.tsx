@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Users, UserCheck, FolderKanban, FileText, LogOut,
   Shield, Database, Activity, BarChart3, ChevronDown, ScrollText,
-  ClipboardList, Kanban, ClipboardCheck, Zap, Search, Settings,
+  ClipboardList, Kanban, ClipboardCheck, Zap, Search, Settings, X,
 } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
@@ -30,7 +30,15 @@ const riskNav = [
   { href: "/risk-treatment/kanban",     label: "   Kanban Board",   icon: Kanban },
 ];
 
-export default function Sidebar({ userName, userRole }: { userName: string; userRole: string }) {
+export default function Sidebar({
+  userName,
+  userRole,
+  onClose,
+}: {
+  userName: string;
+  userRole: string;
+  onClose?: () => void;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const inRisk   = pathname.startsWith("/risk-assessment") || pathname.startsWith("/risk-treatment");
@@ -67,16 +75,28 @@ export default function Sidebar({ userName, userRole }: { userName: string; user
   }
 
   return (
-    <aside className="w-64 bg-gray-900 text-white flex flex-col h-screen sticky top-0 overflow-y-auto">
+    <aside className="w-64 bg-gray-900 text-white flex flex-col h-screen overflow-y-auto">
       <div className="p-5 border-b border-gray-700">
-        <div className="flex items-center gap-3">
-          <div className="bg-white rounded-xl p-1 shrink-0">
-            <Image src="/cat-logo.png" alt="CAT INFONET" width={38} height={38} priority />
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="bg-white rounded-xl p-1 shrink-0">
+              <Image src="/cat-logo.png" alt="CAT INFONET" width={38} height={38} priority />
+            </div>
+            <div className="min-w-0">
+              <p className="font-bold text-sm leading-tight">CAT INFONET</p>
+              <p className="text-gray-400 text-xs">Admin Portal</p>
+            </div>
           </div>
-          <div>
-            <p className="font-bold text-sm leading-tight">CAT INFONET</p>
-            <p className="text-gray-400 text-xs">Admin Portal</p>
-          </div>
+          {/* Close button — mobile only */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="lg:hidden p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors shrink-0"
+              aria-label="Close menu"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
       </div>
 

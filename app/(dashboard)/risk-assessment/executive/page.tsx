@@ -108,7 +108,7 @@ export default function ExecutiveDashboardPage() {
       </div>
 
       {/* Risk level breakdown */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {(["Critical","Medium","Low"] as RiskLevel[]).map(level => {
           const c = RISK_COLORS[level];
           const count = countMap[level] ?? 0;

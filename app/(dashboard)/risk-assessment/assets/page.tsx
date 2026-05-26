@@ -140,7 +140,7 @@ export default function AssetsPage() {
                       <p className="text-xs text-gray-400">Asset Value</p>
                     </div>
                   </div>
-                  <div className="mt-3 grid grid-cols-4 gap-2 text-xs text-center">
+                  <div className="mt-3 grid grid-cols-2 lg:grid-cols-4 gap-2 text-xs text-center">
                     {[
                       { label: "C", val: a.confidentiality, color: "bg-blue-50 text-blue-700" },
                       { label: "I", val: a.integrity,       color: "bg-purple-50 text-purple-700" },

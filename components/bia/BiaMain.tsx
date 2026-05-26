@@ -278,7 +278,7 @@ export default function BiaMain({
       )}
 
       {/* Tab nav */}
-      <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1 w-fit">
+      <div className="flex flex-wrap items-center gap-1 bg-gray-100 rounded-xl p-1 w-fit max-w-full overflow-x-auto">
         {([
           { id: "register",  label: "A. Process Register", icon: ClipboardList },
           { id: "assess",    label: "B. Impact Assessment", icon: Activity },
