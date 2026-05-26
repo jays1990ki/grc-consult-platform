@@ -5,13 +5,12 @@ services:
     region: singapore   # closest to Thailand / SEA
     plan: starter       # upgrade to standard for persistent disk
 
-    buildCommand: |
-      npm ci
-      npm run db:push
-      npm run db:seed:frameworks
-      npm run build
+    # Build phase: compile only — persistent disk is NOT mounted during build
+    buildCommand: npm ci && npm run build
 
-    startCommand: npm start
+    # Start phase: disk is mounted here — run idempotent migrations then serve
+    # db:push and db:seed:frameworks both use INSERT OR IGNORE, safe to run on every start
+    startCommand: npm run db:push && npm run db:seed:frameworks && npm start
 
     # Persistent disk required for SQLite + uploaded files
     disk:

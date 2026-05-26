@@ -75,11 +75,17 @@ npm run db:seed:risk             # sample risk assets
 
 ## Deploy to Render.com
 
+This project uses **SQLite** (`better-sqlite3`). Render supports this via a **Persistent Disk** — no PostgreSQL required.
+
+> **Important**: Render's persistent disk is only available at *runtime*, not during the build phase.  
+> `render.yaml` is already configured correctly: migrations run in `startCommand`, not `buildCommand`.
+
 1. Push to GitHub (ensure `data/` and `.env` are in `.gitignore`)
 2. Create new **Web Service** on Render, point to repo
 3. Render auto-reads `render.yaml`
-4. Add `JWT_SECRET` in Render dashboard → Environment → Secret Files
-5. Enable **Persistent Disk** (required for SQLite) — already configured in `render.yaml`
+4. Add `JWT_SECRET` in Render dashboard → Environment → Add Environment Variable
+5. The persistent disk (`me-admin-data`, 1 GB, mounted at `data/`) is declared in `render.yaml` — Render provisions it automatically
+6. Migrations and framework seeds run automatically on each deploy (idempotent — safe to repeat)
 
 ---
 
