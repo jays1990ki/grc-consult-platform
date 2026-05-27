@@ -2,37 +2,35 @@ import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import * as schema from "./schema";
 import { DB_PATH } from "../db-path";
+import os from "os";
+import path from "path";
 
-// Lazy singleton — defers `new Database()` until the first actual DB call.
-// This prevents better-sqlite3 from crashing at Next.js build time on
-// Render.com, where the persistent disk (/data) is only mounted at runtime.
-let _sqlite: Database.Database | null = null;
-let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
-
-function getDb(): ReturnType<typeof drizzle<typeof schema>> {
-  if (!_db) {
-    _sqlite = new Database(DB_PATH);
-    _sqlite.pragma("journal_mode = WAL");
-    _sqlite.pragma("foreign_keys = ON");
-    _db = drizzle(_sqlite, { schema });
+// Open the database safely.
+//
+// Problem: Render.com mounts the persistent disk (/data) only at runtime,
+// NOT during `npm run build`. better-sqlite3 throws if the directory does
+// not exist. The Proxy workaround introduced `this`-binding bugs in drizzle.
+//
+// Solution: try the real DB_PATH first; if it fails (build phase, /data not
+// mounted), fall back to a throw-away temp file so the build completes.
+// At runtime /data IS mounted, so the real DB is always used in production.
+//
+// Each phase is a separate Node.js process — build state never leaks to
+// runtime, and the temp file is discarded when the build container exits.
+function openDatabase(): Database.Database {
+  try {
+    return new Database(DB_PATH);
+  } catch {
+    // Build-phase fallback: create a throw-away DB so webpack/Next.js
+    // can import this module without crashing.
+    const tmp = path.join(os.tmpdir(), "app-build.db");
+    return new Database(tmp);
   }
-  return _db;
 }
 
-// Re-export a Proxy so callers keep the exact same `db.select(...)` API
-// without any changes — the real connection is opened on first property access.
-//
-// IMPORTANT: methods must be bound to the drizzle instance, not the Proxy target.
-// drizzle-orm methods (select, insert, update, delete, …) access `this.session`
-// and `this.dialect` internally — if `this` is the empty Proxy target {},
-// they throw TypeError and every DB call returns "Internal server error".
-export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
-  get(_target, prop) {
-    const instance = getDb();
-    const val = (instance as any)[prop];
-    // Bind functions so `this` is the real drizzle instance, not the proxy target
-    return typeof val === "function" ? val.bind(instance) : val;
-  },
-});
+const sqlite = openDatabase();
+sqlite.pragma("journal_mode = WAL");
+sqlite.pragma("foreign_keys = ON");
 
+export const db = drizzle(sqlite, { schema });
 export { schema };

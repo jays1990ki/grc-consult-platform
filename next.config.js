@@ -79,6 +79,13 @@ const nextConfig = {
     ];
   },
 
+  // Serve images directly without /_next/image optimizer.
+  // sharp (required by the optimizer) fails on Render.com's Linux environment.
+  // unoptimized: true serves /public files as-is — simpler and reliable.
+  images: {
+    unoptimized: true,
+  },
+
   // A05: Prevent source-map exposure in production
   productionBrowserSourceMaps: false,
 };
