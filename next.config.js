@@ -51,6 +51,9 @@ const securityHeaders = [
 
 const nextConfig = {
   experimental: {
+    // Enables instrumentation.ts → register() called once on server start.
+    // Used to auto-create DB tables + seed default users before first request.
+    instrumentationHook: true,
     // Keep heavy server-only packages out of the edge/client bundles
     serverComponentsExternalPackages: [
       "@react-pdf/renderer",
