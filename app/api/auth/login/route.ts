@@ -106,8 +106,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
 
-  } catch {
-    // A05: Never log request bodies; avoid leaking stack traces to client
+  } catch (err) {
+    // A05: Log error server-side only — never expose stack traces to client
+    console.error("[login] Unexpected error:", err instanceof Error ? err.message : String(err));
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

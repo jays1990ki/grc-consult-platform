@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("admin@mecorp.th");
@@ -38,7 +37,8 @@ export default function LoginPage() {
         {/* Logo + heading */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center bg-white rounded-2xl p-3 shadow-md ring-1 ring-gray-100 mb-4">
-            <Image src="/cat-logo.png" alt="CAT INFONET" width={72} height={72} priority />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/cat-logo.png" alt="CAT INFONET" width={72} height={72} />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">CAT INFONET</h1>
           <p className="text-gray-500 mt-1 text-sm">Admin Portal — Risk Management System</p>

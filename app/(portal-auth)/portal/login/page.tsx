@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function PortalLoginPage() {
   const [email, setEmail]       = useState("");
@@ -35,7 +34,8 @@ export default function PortalLoginPage() {
         <div className="max-w-sm text-center">
           {/* Logo */}
           <div className="bg-white rounded-3xl p-4 inline-flex items-center justify-center mx-auto mb-6 shadow-2xl">
-            <Image src="/cat-logo.png" alt="CAT INFONET" width={100} height={100} priority />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/cat-logo.png" alt="CAT INFONET" width={100} height={100} />
           </div>
           <h1 className="text-3xl font-black mb-1">CAT INFONET</h1>
           <p className="text-xl font-semibold text-blue-100">Risk Assessment Portal</p>
@@ -65,7 +65,8 @@ export default function PortalLoginPage() {
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
             <div className="inline-flex items-center justify-center bg-white rounded-2xl p-3 shadow-md mb-3">
-              <Image src="/cat-logo.png" alt="CAT INFONET" width={56} height={56} priority />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/cat-logo.png" alt="CAT INFONET" width={56} height={56} />
             </div>
             <p className="font-black text-xl text-gray-900">CAT INFONET</p>
             <p className="text-sm text-gray-500">Risk Assessment Portal</p>
@@ -74,7 +75,8 @@ export default function PortalLoginPage() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             {/* Logo header inside card */}
             <div className="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
-              <Image src="/cat-logo.png" alt="CAT INFONET" width={44} height={44} className="rounded-lg" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/cat-logo.png" alt="CAT INFONET" width={44} height={44} className="rounded-lg" />
               <div>
                 <p className="font-bold text-gray-900 text-sm">CAT INFONET</p>
                 <p className="text-xs text-gray-400">Risk Assessment Portal</p>

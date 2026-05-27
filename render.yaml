@@ -12,9 +12,10 @@ services:
 
     # Start phase: disk is mounted, DB_PATH points to the persistent volume.
     # mkdir -p ensures /data exists before migrations try to open the DB file.
-    # Migrations are idempotent (IF NOT EXISTS / INSERT OR IGNORE) — safe on every deploy.
-    # db:seed creates admin/manager/viewer users with onConflictDoNothing — safe to re-run.
-    startCommand: mkdir -p /data && npm run db:push && npm run db:seed:frameworks && npm run db:seed && npm start
+    # db:push runs all TypeScript migrations (idempotent — IF NOT EXISTS).
+    # seed-admin.js is plain CommonJS — no tsx required, guaranteed to run.
+    # seed:frameworks seeds ISO/risk framework data (idempotent).
+    startCommand: mkdir -p /data && npm run db:push && node scripts/seed-admin.js && npm run db:seed:frameworks && npm start
 
     # Persistent disk — SQLite database + uploaded evidence files
     disk:
