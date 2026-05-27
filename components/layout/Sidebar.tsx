@@ -5,10 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Users, UserCheck, FolderKanban, FileText, LogOut,
   Shield, Database, Activity, BarChart3, ChevronDown, ScrollText,
-  ClipboardList, Kanban, ClipboardCheck, Zap, Search, Settings, X,
+  ClipboardList, Kanban, ClipboardCheck, Zap, Search, Settings, X, ShieldCheck,
 } from "lucide-react";
 import { useState } from "react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const mainNav = [
@@ -80,7 +79,8 @@ export default function Sidebar({
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <div className="bg-white rounded-xl p-1 shrink-0">
-              <Image src="/cat-logo.png" alt="CAT INFONET" width={38} height={38} priority />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/cat-logo.png" alt="CAT INFONET" width={38} height={38} />
             </div>
             <div className="min-w-0">
               <p className="font-bold text-sm leading-tight">CAT INFONET</p>
@@ -208,6 +208,15 @@ export default function Sidebar({
             <p className="text-xs text-gray-400 capitalize">{userRole}</p>
           </div>
         </div>
+        <Link href="/security"
+          className={cn(
+            "w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors mb-1",
+            pathname === "/security"
+              ? "bg-blue-600 text-white"
+              : "text-gray-400 hover:bg-gray-800 hover:text-white"
+          )}>
+          <ShieldCheck size={16} /> Security (MFA)
+        </Link>
         <button onClick={handleLogout}
           className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-red-400 hover:bg-gray-800 rounded-lg transition-colors">
           <LogOut size={16} /> Sign Out

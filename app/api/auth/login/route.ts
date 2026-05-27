@@ -9,6 +9,7 @@ import { db, schema } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { createSession } from "@/lib/auth/session";
+import { createMfaPending } from "@/lib/auth/mfa-session";
 import { writeLog, getClientIP } from "@/lib/audit";
 import { loginLimiter } from "@/lib/rate-limit";
 import { sanitizeEmail, sanitizeText } from "@/lib/sanitize";
@@ -85,6 +86,19 @@ export async function POST(req: NextRequest) {
 
     // ── A04: Reset rate limit on successful login ─────────────────────────
     loginLimiter.reset(ip);
+
+    // ── MFA: if enabled, issue a short-lived pending token instead of a
+    //         full session and ask the client to continue to /login/mfa ───
+    if (user.mfaEnabled === 1) {
+      await createMfaPending({ id: user.id, email: user.email, role: user.role, name: user.name });
+      writeLog({
+        userId: user.id, userName: user.name, userEmail: user.email,
+        action: "login", module: "auth",
+        details: `MFA step required — password OK — IP: ${ip}`,
+        ipAddress: ip,
+      });
+      return NextResponse.json({ mfa_required: true });
+    }
 
     await createSession({
       id:    user.id,

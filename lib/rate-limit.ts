@@ -83,3 +83,9 @@ export const uploadLimiter = createRateLimiter({
   max:      20,
   windowMs: 60 * 60 * 1000,
 });
+
+/** MFA code verification: 5 attempts per IP per 15 minutes */
+export const mfaLimiter = createRateLimiter({
+  max:      5,
+  windowMs: 15 * 60 * 1000,
+});

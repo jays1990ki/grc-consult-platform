@@ -22,6 +22,7 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Login failed"); return; }
+      if (data.mfa_required) { router.push("/login/mfa"); return; }
       router.push("/dashboard");
       router.refresh();
     } catch {

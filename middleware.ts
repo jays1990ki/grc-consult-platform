@@ -20,6 +20,7 @@ const PUBLIC_PATHS = [
   "/login",
   "/portal/login",
   "/api/auth/login",
+  "/api/auth/mfa-verify",  // TOTP verification (uses me_mfa_pending cookie, not session)
   "/api/health",
 ];
 

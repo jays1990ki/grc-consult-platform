@@ -16,7 +16,8 @@ export type AuditModule =
   | "bia_processes"
   | "audit_projects" | "evidence_files"
   | "gap_frameworks" | "gap_requirements"
-  | "portal_permissions";
+  | "portal_permissions"
+  | "security";
 
 export interface AuditEntry {
   userId?:     number;

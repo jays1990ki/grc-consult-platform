@@ -41,14 +41,16 @@ sqlite.pragma("foreign_keys = ON");
 // synchronous — no async/await needed.
 sqlite.exec(`
   CREATE TABLE IF NOT EXISTS users (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    name       TEXT    NOT NULL,
-    email      TEXT    NOT NULL UNIQUE,
-    password   TEXT    NOT NULL,
-    role       TEXT    NOT NULL DEFAULT 'viewer',
-    status     TEXT    NOT NULL DEFAULT 'active',
-    created_at TEXT    NOT NULL DEFAULT '',
-    updated_at TEXT    NOT NULL DEFAULT ''
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    name        TEXT    NOT NULL,
+    email       TEXT    NOT NULL UNIQUE,
+    password    TEXT    NOT NULL,
+    role        TEXT    NOT NULL DEFAULT 'viewer',
+    status      TEXT    NOT NULL DEFAULT 'active',
+    mfa_enabled INTEGER NOT NULL DEFAULT 0,
+    mfa_secret  TEXT,
+    created_at  TEXT    NOT NULL DEFAULT '',
+    updated_at  TEXT    NOT NULL DEFAULT ''
   );
 
   -- INSERT OR IGNORE: safe to run on every boot; existing rows are untouched.
@@ -57,6 +59,15 @@ sqlite.exec(`
     ('Jane Manager',  'manager@mecorp.th', '$2a$12$CGhZJ2TZ.zfAKF.vscdNx.gfDVpqfNWlPCaExzqvSyElPEnPjqALq', 'manager', 'active', datetime('now'), datetime('now')),
     ('Tom Viewer',    'viewer@mecorp.th',  '$2a$12$ZpEGi64xHVUtqFF.cZzrF.zRVBjaEiQhGYguB8WKQoARt4idJqGJG', 'viewer',  'active', datetime('now'), datetime('now'));
 `);
+
+// Idempotent column additions for existing DBs created before MFA was added
+try {
+  const userCols = sqlite.pragma("table_info(users)") as { name: string }[];
+  if (!userCols.some(c => c.name === "mfa_enabled"))
+    sqlite.exec("ALTER TABLE users ADD COLUMN mfa_enabled INTEGER NOT NULL DEFAULT 0");
+  if (!userCols.some(c => c.name === "mfa_secret"))
+    sqlite.exec("ALTER TABLE users ADD COLUMN mfa_secret TEXT");
+} catch { /* ignore — build-phase temp DB or columns already exist */ }
 
 export const db = drizzle(sqlite, { schema });
 export { schema };
