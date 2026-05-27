@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("admin@mecorp.th");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -52,7 +52,8 @@ export default function LoginPage() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              placeholder="admin@mecorp.th"
+              placeholder="your@email.com"
+              autoComplete="username"
               required
             />
           </div>
@@ -64,6 +65,7 @@ export default function LoginPage() {
               onChange={e => setPassword(e.target.value)}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
               placeholder="••••••••"
+              autoComplete="current-password"
               required
             />
           </div>
