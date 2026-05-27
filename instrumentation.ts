@@ -11,10 +11,16 @@
  * Docs: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation
  */
 export async function register() {
-  // Only run in the Node.js server runtime, not Edge or build phase.
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    // Dynamic import so webpack doesn't try to bundle better-sqlite3
-    // into the client bundle during `next build`.
+  // NEXT_RUNTIME is 'edge' in the Edge runtime, 'nodejs' in the Node.js
+  // server runtime, and may be undefined in some Next.js 14 configurations.
+  // We run the boot in every context EXCEPT Edge (which has no Node.js APIs).
+  console.log(
+    "[instrumentation] register() called — NEXT_RUNTIME:",
+    process.env.NEXT_RUNTIME ?? "(undefined)"
+  );
+
+  if (process.env.NEXT_RUNTIME !== "edge") {
+    // Dynamic import keeps better-sqlite3 out of the client/edge bundle.
     const { bootDatabase } = await import("./lib/db/boot");
     await bootDatabase();
   }

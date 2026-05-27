@@ -32,5 +32,24 @@ const sqlite = openDatabase();
 sqlite.pragma("journal_mode = WAL");
 sqlite.pragma("foreign_keys = ON");
 
+// ── Synchronous bootstrap ─────────────────────────────────────────────────────
+// Create the users table if it does not exist.  This runs immediately when
+// this module is first imported (before ANY drizzle query executes), so the
+// login route can never throw "no such table: users" even when no external
+// migration script has been run (e.g. Render.com ignoring startCommand).
+// The IF NOT EXISTS guard makes it fully idempotent.
+sqlite.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    name       TEXT    NOT NULL,
+    email      TEXT    NOT NULL UNIQUE,
+    password   TEXT    NOT NULL,
+    role       TEXT    NOT NULL DEFAULT 'viewer',
+    status     TEXT    NOT NULL DEFAULT 'active',
+    created_at TEXT    NOT NULL DEFAULT '',
+    updated_at TEXT    NOT NULL DEFAULT ''
+  )
+`);
+
 export const db = drizzle(sqlite, { schema });
 export { schema };
