@@ -21,9 +21,17 @@ function getDb(): ReturnType<typeof drizzle<typeof schema>> {
 
 // Re-export a Proxy so callers keep the exact same `db.select(...)` API
 // without any changes — the real connection is opened on first property access.
+//
+// IMPORTANT: methods must be bound to the drizzle instance, not the Proxy target.
+// drizzle-orm methods (select, insert, update, delete, …) access `this.session`
+// and `this.dialect` internally — if `this` is the empty Proxy target {},
+// they throw TypeError and every DB call returns "Internal server error".
 export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
   get(_target, prop) {
-    return (getDb() as any)[prop];
+    const instance = getDb();
+    const val = (instance as any)[prop];
+    // Bind functions so `this` is the real drizzle instance, not the proxy target
+    return typeof val === "function" ? val.bind(instance) : val;
   },
 });
 
