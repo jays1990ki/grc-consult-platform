@@ -58,6 +58,17 @@ const nextConfig = {
     ],
   },
 
+  // Explicit @/ alias for webpack — ensures Linux (Render.com) resolves
+  // path aliases the same way as macOS even without baseUrl in tsconfig.
+  webpack(config) {
+    const path = require("path");
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.resolve(__dirname),
+    };
+    return config;
+  },
+
   async headers() {
     return [
       {
