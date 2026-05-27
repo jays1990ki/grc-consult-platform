@@ -13,7 +13,8 @@ services:
     # Start phase: disk is mounted, DB_PATH points to the persistent volume.
     # mkdir -p ensures /data exists before migrations try to open the DB file.
     # Migrations are idempotent (IF NOT EXISTS / INSERT OR IGNORE) — safe on every deploy.
-    startCommand: mkdir -p /data && npm run db:push && npm run db:seed:frameworks && npm start
+    # db:seed creates admin/manager/viewer users with onConflictDoNothing — safe to re-run.
+    startCommand: mkdir -p /data && npm run db:push && npm run db:seed:frameworks && npm run db:seed && npm start
 
     # Persistent disk — SQLite database + uploaded evidence files
     disk:
