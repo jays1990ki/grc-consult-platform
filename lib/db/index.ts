@@ -33,11 +33,12 @@ sqlite.pragma("journal_mode = WAL");
 sqlite.pragma("foreign_keys = ON");
 
 // ── Synchronous bootstrap ─────────────────────────────────────────────────────
-// Create the users table if it does not exist.  This runs immediately when
-// this module is first imported (before ANY drizzle query executes), so the
-// login route can never throw "no such table: users" even when no external
-// migration script has been run (e.g. Render.com ignoring startCommand).
-// The IF NOT EXISTS guard makes it fully idempotent.
+// Runs immediately when this module is first imported, BEFORE any drizzle
+// query executes.  Guarantees the users table and default accounts exist
+// even when Render.com skips the startCommand (free plan, fresh deploy, etc.)
+//
+// Passwords are pre-computed bcrypt hashes (cost 12) so this is fully
+// synchronous — no async/await needed.
 sqlite.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,7 +49,13 @@ sqlite.exec(`
     status     TEXT    NOT NULL DEFAULT 'active',
     created_at TEXT    NOT NULL DEFAULT '',
     updated_at TEXT    NOT NULL DEFAULT ''
-  )
+  );
+
+  -- INSERT OR IGNORE: safe to run on every boot; existing rows are untouched.
+  INSERT OR IGNORE INTO users (name, email, password, role, status, created_at, updated_at) VALUES
+    ('Admin ME Corp', 'admin@mecorp.th',   '$2a$12$fHI3WsjVxkiQmaI8xF/MceYQXwy/w8zkheMD8ApHnJpvPiK2q3s.S', 'admin',   'active', datetime('now'), datetime('now')),
+    ('Jane Manager',  'manager@mecorp.th', '$2a$12$CGhZJ2TZ.zfAKF.vscdNx.gfDVpqfNWlPCaExzqvSyElPEnPjqALq', 'manager', 'active', datetime('now'), datetime('now')),
+    ('Tom Viewer',    'viewer@mecorp.th',  '$2a$12$ZpEGi64xHVUtqFF.cZzrF.zRVBjaEiQhGYguB8WKQoARt4idJqGJG', 'viewer',  'active', datetime('now'), datetime('now'));
 `);
 
 export const db = drizzle(sqlite, { schema });
